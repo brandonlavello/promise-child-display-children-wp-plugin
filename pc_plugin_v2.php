@@ -131,8 +131,21 @@ function pc_display_all_children_init(){
     'body' => '{"query": "query { children(where:{allowStewardshipDonations:{eq:\"Yes\"}},order:{childId:ASC}){childId name } }"}'
 );
    //TODO:
-   $result = wp_remote_post( 'https://www.hcsdev.com/promiseChildGQL/graphQL/', $args);
-   print_r($result);
+   $request = wp_remote_post( 'https://graphql.promisechild.org/graphql/', $args);
+
+   if ( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) != 200 ) {
+      return false;
+   }
+
+   $response = json_decode(wp_remote_retrieve_body($request),true);
+
+   print_r($response);
+
+    // foreach ($response['data']['children'] as $child) {
+    //   $child_obj= new Pc_child($child_id);
+    //   $response_results[$child['childId']]['name'] = $child['name'];
+
+    // }
 
 
   //

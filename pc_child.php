@@ -146,7 +146,7 @@ class Pc_child {
     'method' => 'POST',
     'body' => $pcQueryString
     );
-    $request = wp_remote_post( 'https://www.hcsdev.com/promiseChildGQL/graphQL/', $args);
+    $request = wp_remote_post( 'https://graphql.promisechild.org/graphql/', $args);
 
     if ( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) != 200 ) {
         return false;
