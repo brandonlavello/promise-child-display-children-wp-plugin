@@ -25,7 +25,6 @@ class Pc_child {
     
     $this->child_id=$child_id;
     //request_child_data requests data and sets all variables appropriately
-    $this->request_child_data($child_id);
   } // End Constructor
 
   function __destruct() {
@@ -77,7 +76,10 @@ class Pc_child {
   }
   public function get_prayer_requests() {
     return ($this->prayer_requests);
-  }    
+  }
+  public function get_child_details() {
+    $this->request_child_data();
+  }  
 
 
   // Setters
@@ -126,40 +128,22 @@ class Pc_child {
 
 
   // Request Child Data from PC API
-  private function request_child_data($child_id) {
+  private function request_child_data() {
     // echo nl2br ("request child data\n"); 
 
     //Build GraphQL Query by appending to pcQueryString variable for ease of editing query later
     $pcQueryString = '{"query":"query { ';
     $pcQueryString .= 'children( where: { ';
-    $pcQueryString .= 'childId: { eq: ' . $child_id . ' }})';
+    $pcQueryString .= 'childId: { eq: ' . $this->child_id . ' }})';
     $pcQueryString .= '{childId name imagePath donationLink publicLocation gender formatedAge websiteStatus grade caretaker schoolStatus religiousBeliefs healthIssues interests prayerRequests}}",';
     $pcQueryString .= '"variables":{}}';
-
     // echo $pcQueryString;
 
-    $args = array(
-    'headers' => array(
-        'content-type' => 'application/json'
-    ),
-    'httpversion' => '1.1',
-    'method' => 'POST',
-    'body' => $pcQueryString
-    );
-    $request = wp_remote_post( 'https://graphql.promisechild.org/graphql/', $args);
-
-    if ( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) != 200 ) {
-        return false;
-    }
-
-    //Handle received data --  decode JSON, extract child from results.
-    // Then use Setters to set child obj variables to data from API
-    // If key does not exist for child, set default "" value to prevent errors.
-
-    $response = json_decode(wp_remote_retrieve_body($request),true);
+    // echo $pcQueryString;
+    $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
+    $response = $api->get_data($pcQueryString);
 
     $extracted_child = $response['data']['children'][0];
-    // var_dump($extracted_child);
 
     // Set object variables to values Requested from PC API
     //websiteStatus

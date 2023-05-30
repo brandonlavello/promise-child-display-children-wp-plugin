@@ -13,6 +13,8 @@
 
 // Includes
 include_once( plugin_dir_path( __FILE__ ) . 'pc_child.php');
+include_once( plugin_dir_path( __FILE__ ) . 'pc_api_request.php');
+
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
@@ -66,6 +68,7 @@ function pc_display_child_profile_init($atts) {
 function get_child_details($child_id) {
 
   $child_obj= new Pc_child($child_id);
+  $child_obj->get_child_details();
 
   return $child_obj;
 
@@ -119,37 +122,54 @@ function write_child_HTML($child) {
 // Functions for Displaying All Promise Children
 
 function pc_display_all_children_init(){
+  $query = '{"query": "query { children(where:{allowOnlineDonations:{eq:\"Yes\"}}){childId name publicLocation imagePath donationLink isSponsored} }"}';
 
+  
   echo "<h1>Promise Child Children</h1>";
 
-  $args = array(
-    'headers' => array(
-        'content-type' => 'application/json'
-    ),
-    'httpversion' => '1.1',
-    'method' => 'POST',
-    'body' => '{"query": "query { children(where:{allowStewardshipDonations:{eq:\"Yes\"}},order:{childId:ASC}){childId name } }"}'
-);
-   //TODO:
-   $request = wp_remote_post( 'https://graphql.promisechild.org/graphql/', $args);
+  $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
+  $response = $api->get_data($query);
 
-   if ( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) != 200 ) {
-      return false;
-   }
+  //  print_r($response);
+   $child_obj_array = array();
 
-   $response = json_decode(wp_remote_retrieve_body($request),true);
+    foreach ($response['data']['children'] as $child) {
+      $child_obj = new Pc_child($child["childId"]);
+      $child_obj_array[$child["childId"]] = $child_obj;
 
-   print_r($response);
+      // $response_results[$child['childId']]['name'] = $child['name'];
+      if (array_key_exists("name", $child)) {
+        $child_obj->set_name($child["name"]);
+      } else {$child_obj->set_name("");}
 
-    // foreach ($response['data']['children'] as $child) {
-    //   $child_obj= new Pc_child($child_id);
-    //   $response_results[$child['childId']]['name'] = $child['name'];
+      // $response_results[$child['childId']]['publicLocation'] = $child['publicLocation'];
+      if (array_key_exists("publicLocation", $child)) {
+        $child_obj->set_public_location($child["publicLocation"]);
+      } else {$child_obj->set_public_location("");}
 
-    // }
+      // $response_results[$child['childId']]['imagePath'] = $child['imagePath'];
+      if (array_key_exists("imagePath", $child)) {
+        $child_obj->set_image_path($child["imagePath"]);
+      } else {$child_obj->set_image_path("");}
 
+      // $response_results[$child['childId']]['donationLink'] = $child['donationLink'];
+      if (array_key_exists("donationLink", $child)) {
+        $child_obj->set_donation_link($child["donationLink"]);
+      } else {$child_obj->set_donation_link("");}
 
+      // $response_results[$child['childId']]['isSponsored'] = $child['isSponsored'];
+      // if (array_key_exists("isSponsored", $child)) {
+      //   $child_obj->set_website_status($child["isSponsored"]);
+      // } else {$child_obj->set_website_status("");}
+
+    }
+    foreach ($child_obj_array as $child_obj) {
+      echo "\n" . $child_obj->get_name();
+      echo "\n" . $child_obj->get_public_location();
+      echo "\n" . $child_obj->get_image_path();
+      echo "\n" . $child_obj->get_donation_link();
+    }
   //
-
 }
 
 
