@@ -11,17 +11,22 @@
     * License: GNU GPLv3
 */
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
 // Includes
 include_once( plugin_dir_path( __FILE__ ) . 'pc_child.php');
 include_once( plugin_dir_path( __FILE__ ) . 'pc_api_request.php');
 
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly
-}
-
 // ADD Actions
 add_action('admin_menu', 'pc_admin_menu_init');
+
+//----------------------------------------
+// All Shortcode adds
+add_shortcode('pc_display_child_profile', 'pc_display_child_profile_init');
+add_shortcode('pc_display_all_children', 'pc_display_all_children_init');
 
 // Add admin page
 function pc_admin_menu_init(){
@@ -38,9 +43,6 @@ function pc_admin_page(){
       <br />      
   <?php
 } //end pc admin page
-
-
-
 
 
 
@@ -117,15 +119,15 @@ function write_child_HTML($child) {
 
 
 
-
 //----------------------------------------
 // Functions for Displaying All Promise Children
 
 function pc_display_all_children_init(){
-  $query = '{"query": "query { children(where:{allowOnlineDonations:{eq:\"Yes\"}}){childId name publicLocation imagePath donationLink isSponsored} }"}';
-
+  $query = '{"query": "query { children(where:{allowOnlineDonations:{eq:\"Yes\"}}){childId name publicLocation imagePath donationLink } }"}';
   
   echo "<h1>Promise Child Children</h1>";
+
+  
 
   $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
   $response = $api->get_data($query);
@@ -157,25 +159,29 @@ function pc_display_all_children_init(){
         $child_obj->set_donation_link($child["donationLink"]);
       } else {$child_obj->set_donation_link("");}
 
-      // $response_results[$child['childId']]['isSponsored'] = $child['isSponsored'];
-      // if (array_key_exists("isSponsored", $child)) {
-      //   $child_obj->set_website_status($child["isSponsored"]);
-      // } else {$child_obj->set_website_status("");}
+    }
+    
+    ob_start();
+    ?>
+    <div id="graphql-api-container">
+      <!-- Render your data here -->
+      <?php foreach ($child_obj_array as $child_obj) { ?>
+        <div class="graphql-api-item"><?php
+          echo "\n" . $child_obj->get_name();
+          echo "\n" . $child_obj->get_public_location();
+          echo "\n" . $child_obj->get_image_path();
+          echo "\n" . $child_obj->get_donation_link(); ?>
+        </div>
+      <?php } ?>
+    </div>
+    <?php
 
-    }
-    foreach ($child_obj_array as $child_obj) {
-      echo "\n" . $child_obj->get_name();
-      echo "\n" . $child_obj->get_public_location();
-      echo "\n" . $child_obj->get_image_path();
-      echo "\n" . $child_obj->get_donation_link();
-    }
-  //
+    // foreach ($child_obj_array as $child_obj) {
+    //   echo "\n" . $child_obj->get_name();
+    //   echo "\n" . $child_obj->get_public_location();
+    //   echo "\n" . $child_obj->get_image_path();
+    //   echo "\n" . $child_obj->get_donation_link();
+    // }
+    return ob_get_clean();
 }
-
-
-
-//----------------------------------------
-// All Shortcode adds
-add_shortcode('pc_display_child_profile', 'pc_display_child_profile_init');
-add_shortcode('pc_display_all_children', 'pc_display_all_children_init');
 
