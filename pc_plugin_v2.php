@@ -123,13 +123,28 @@ function write_child_HTML($child) {
 // Functions for Displaying All Promise Children
 
 function pc_display_all_children_init(){
-  $query = '{"query": "query { children(where:{allowOnlineDonations:{eq:\"Yes\"}}){childId name publicLocation imagePath donationLink } }"}';
+  // $query = '{"query": "query { children(where:{allowOnlineDonations:{eq:\"Yes\"}}){childId name publicLocation imagePath donationLink } }"}';
+  
   $page = 1;
+
+  $query_type = 'children';
+  
+  $query_where = [
+      'allowOnlineDonations' => '{eq:\"Yes\"}',
+      'pageNumberAll' => '{eq:' . $page . '}'
+      ];
+    
+  $query_order = [
+      'rowNumberAll' => 'ASC',
+    ];
+
+  $query_child_attributes = 'childId name publicLocation imagePath donationLink';
+
   echo "<h1>Promise Child Children</h1>";
 
   $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
-  $response = $api->get_data($query,$page);
-
+  $response = $api->get_data($query_type,$query_where,$query_order,$query_child_attributes);
+  
   //  print_r($response);
    $child_obj_array = array();
 

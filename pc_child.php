@@ -132,16 +132,23 @@ class Pc_child {
     // echo nl2br ("request child data\n"); 
 
     //Build GraphQL Query by appending to pcQueryString variable for ease of editing query later
-    $pcQueryString = '{"query":"query { ';
-    $pcQueryString .= 'children( where: { ';
-    $pcQueryString .= 'childId: { eq: ' . $this->child_id . ' }})';
-    $pcQueryString .= '{childId name imagePath donationLink publicLocation gender formatedAge websiteStatus grade caretaker schoolStatus religiousBeliefs healthIssues interests prayerRequests}}",';
-    $pcQueryString .= '"variables":{}}';
+
+    $query_type = 'children';
+  
+    $query_where = [
+        'childId' => '{eq:'. $this->child_id .'}',
+        ];
+      
+    $query_order = [
+      ];
+
+    $query_child_attributes = 'childId imagePath donationLink publicLocation gender formatedAge websiteStatus grade caretaker schoolStatus religiousBeliefs healthIssues interests prayerRequests';
+
     // echo $pcQueryString;
 
     // echo $pcQueryString;
     $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
-    $response = $api->get_data($pcQueryString,1);
+    $response = $api->get_data($query_type,$query_where,$query_order,$query_child_attributes);
 
     $extracted_child = $response['data']['children'][0];
 

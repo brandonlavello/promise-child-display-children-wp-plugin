@@ -11,7 +11,31 @@ class Pc_API_Request {
         // echo nl2br ("In Destructor\n");
     }
 
-    public function get_data($query_string,$page) {
+    public function get_data($query_type,$query_where,$query_order,$query_child_attributes) {
+
+        //build Query string from query arguments
+
+        $query_string = '{"query":"query {' . $query_type;
+        $query_string .= '(where:{';
+
+        foreach($query_where as $key => $value) {
+        $query_string .= "$key:$value";
+        }
+
+        $query_string .= '} ';
+
+
+        $query_string .= 'order:{ ';
+            
+        foreach($query_order as $key => $value) {
+            $query_string .= "$key:$value";
+        }
+
+        $query_string .= '})';
+
+        $query_string .= "{" . $query_child_attributes . "}";
+
+        $query_string .= '}"}';
 
         $args = array(
         'headers' => array(
