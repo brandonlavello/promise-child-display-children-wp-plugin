@@ -2,9 +2,11 @@
 class Pc_API_Request {
 
     private $api_url;
+    private $page;
 
-    public function __construct($url) {
+    public function __construct($url, $page) {
         $this->api_url = $url;
+        $this->page = $page;
     }    
     
     function __destruct() {

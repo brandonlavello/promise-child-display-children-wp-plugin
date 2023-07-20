@@ -124,12 +124,10 @@ function write_child_HTML($child) {
 
 function pc_display_all_children_init(){
   $query = '{"query": "query { children(where:{allowOnlineDonations:{eq:\"Yes\"}}){childId name publicLocation imagePath donationLink } }"}';
-  
+  $start_page = 1;
   echo "<h1>Promise Child Children</h1>";
 
-  
-
-  $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
+  $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/',$start_page);
   $response = $api->get_data($query);
 
   //  print_r($response);
@@ -172,7 +170,14 @@ function pc_display_all_children_init(){
           echo "\n" . $child_obj->get_image_path();
           echo "\n" . $child_obj->get_donation_link(); ?>
         </div>
+
       <?php } ?>
+
+      <!-- Next/Previous page buttons -->
+      <div class="graphql-api-pagination">
+        <button class="graphql-api-button" data-page="<?php echo $atts['page'] - 1; ?>">Previous</button>
+        <button class="graphql-api-button" data-page="<?php echo $atts['page'] + 1; ?>">Next</button>
+      </div>
     </div>
     <?php
 
