@@ -2,18 +2,16 @@
 class Pc_API_Request {
 
     private $api_url;
-    private $page;
 
-    public function __construct($url, $page) {
+    public function __construct($url) {
         $this->api_url = $url;
-        $this->page = $page;
     }    
     
     function __destruct() {
         // echo nl2br ("In Destructor\n");
     }
 
-    public function get_data($query_string) {
+    public function get_data($query_string,$page) {
 
         $args = array(
         'headers' => array(

@@ -140,8 +140,8 @@ class Pc_child {
     // echo $pcQueryString;
 
     // echo $pcQueryString;
-    $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/',1);
-    $response = $api->get_data($pcQueryString);
+    $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
+    $response = $api->get_data($pcQueryString,1);
 
     $extracted_child = $response['data']['children'][0];
 
