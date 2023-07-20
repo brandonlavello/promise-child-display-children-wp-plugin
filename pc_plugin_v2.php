@@ -63,7 +63,6 @@ function pc_display_child_profile_init($atts) {
   $HTML_string = write_child_HTML($child);
 
   echo $HTML_string;
-
 }
 
 // gets child from database, returns child
@@ -123,21 +122,17 @@ function write_child_HTML($child) {
 // Functions for Displaying All Promise Children
 
 function pc_display_all_children_init(){
-  // $query = '{"query": "query { children(where:{allowOnlineDonations:{eq:\"Yes\"}}){childId name publicLocation imagePath donationLink } }"}';
   
+  //prepare query variables
   $page = 1;
-
   $query_type = 'children';
-  
   $query_where = [
       'allowOnlineDonations' => '{eq:\"Yes\"}',
       'pageNumberAll' => '{eq:' . $page . '}'
       ];
-    
   $query_order = [
       'rowNumberAll' => 'ASC',
     ];
-
   $query_child_attributes = 'childId name publicLocation imagePath donationLink';
 
   echo "<h1>Promise Child Children</h1>";
@@ -196,12 +191,6 @@ function pc_display_all_children_init(){
     </div>
     <?php
 
-    // foreach ($child_obj_array as $child_obj) {
-    //   echo "\n" . $child_obj->get_name();
-    //   echo "\n" . $child_obj->get_public_location();
-    //   echo "\n" . $child_obj->get_image_path();
-    //   echo "\n" . $child_obj->get_donation_link();
-    // }
     return ob_get_clean();
 }
 
