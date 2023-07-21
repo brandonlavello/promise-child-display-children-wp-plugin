@@ -1,7 +1,6 @@
 jQuery(document).ready(function ($) {
     $(document).on('click', '.graphql-api-button', function (e) {
         e.preventDefault();
-        alert("I am an alert box!");
         var button = $(this);
         var page = button.data('page');
 
@@ -14,7 +13,7 @@ jQuery(document).ready(function ($) {
                 page: page,
             },
             success: function (response) {
-                $('#graphql-api-container').html(response);
+                $('#graphql-api-container').html(response);  
             },
         });
     });
