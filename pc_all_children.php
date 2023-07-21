@@ -80,4 +80,19 @@ function write_children_HTML($child_obj_array,$page,$total_pages) {
   <?php
 }
 
+//Gets total page count for pagination
+function get_total_pages(){
+  $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
+
+  $query_type = "publicLocations";
+  $query_where = [
+    'location' => '{neq:\"\"}',
+  ];
+  $query_order = [ ];
+  $query_response_attributes = 'location totalPagesAll';
+  $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
+  $total_pages = $response['data']['publicLocations'][0]['totalPagesAll'];
+  return $total_pages;
+}
+
 ?>
