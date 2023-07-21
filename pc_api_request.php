@@ -11,7 +11,7 @@ class Pc_API_Request {
         // echo nl2br ("In Destructor\n");
     }
 
-    public function get_data($query_type,$query_where,$query_order,$query_child_attributes) {
+    public function get_data($query_type,$query_where,$query_order,$query_response_attributes) {
 
         //build Query string from query arguments
 
@@ -33,7 +33,7 @@ class Pc_API_Request {
 
         $query_string .= '})';
 
-        $query_string .= "{" . $query_child_attributes . "}";
+        $query_string .= "{" . $query_response_attributes . "}";
 
         $query_string .= '}"}';
 

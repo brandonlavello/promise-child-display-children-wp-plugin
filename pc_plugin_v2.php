@@ -122,7 +122,8 @@ function write_child_HTML($child) {
 // Functions for Displaying All Promise Children
 
 function pc_display_all_children_init(){
-  
+  $total_pages = get_total_pages();
+
   //prepare query variables
   $page = 1;
   $query_type = 'children';
@@ -133,12 +134,12 @@ function pc_display_all_children_init(){
   $query_order = [
       'rowNumberAll' => 'ASC',
     ];
-  $query_child_attributes = 'childId name publicLocation imagePath donationLink';
+  $query_response_attributes = 'childId name publicLocation imagePath donationLink';
 
   echo "<h1>Promise Child Children</h1>";
 
   $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
-  $response = $api->get_data($query_type,$query_where,$query_order,$query_child_attributes);
+  $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
   
   //  print_r($response);
    $child_obj_array = array();
@@ -185,8 +186,13 @@ function pc_display_all_children_init(){
 
       <!-- Next/Previous page buttons -->
       <div class="graphql-api-pagination">
-        <button class="graphql-api-button" data-page="<?php echo $atts['page'] - 1; ?>">Previous</button>
-        <button class="graphql-api-button" data-page="<?php echo $atts['page'] + 1; ?>">Next</button>
+        <?php if($page > 1) { ?>
+          <button class="graphql-api-button" data-page="<?php echo $page - 1; ?>">Previous</button>
+        <?php } ?>
+        <?php if($page < $total_pages) { ?>
+          <button class="graphql-api-button" data-page="<?php echo $page + 1; ?>">Next</button>
+        <?php } ?> 
+        <?php echo "<p>" . $page . " of " . $total_pages . "</p>"; ?> 
       </div>
     </div>
     <?php
@@ -194,3 +200,20 @@ function pc_display_all_children_init(){
     return ob_get_clean();
 }
 
+//Gets total page count for pagination
+function get_total_pages(){
+    $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
+
+    $query_type = "publicLocations";
+    $query_where = [
+      'location' => '{neq:\"\"}',
+    ];
+    $query_order = [ ];
+    $query_response_attributes = 'location totalPagesAll';
+    $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
+
+    $total_pages = $response['data']['publicLocations'][0]['totalPagesAll'];
+    // print_r($total_pages);
+
+  return $total_pages;
+}

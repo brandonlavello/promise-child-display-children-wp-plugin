@@ -138,10 +138,10 @@ class Pc_child {
         ];
     $query_order = [
       ];
-    $query_child_attributes = 'childId imagePath donationLink publicLocation gender formatedAge websiteStatus grade caretaker schoolStatus religiousBeliefs healthIssues interests prayerRequests';
+    $query_response_attributes = 'childId imagePath donationLink publicLocation gender formatedAge websiteStatus grade caretaker schoolStatus religiousBeliefs healthIssues interests prayerRequests';
 
     $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
-    $response = $api->get_data($query_type,$query_where,$query_order,$query_child_attributes);
+    $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
 
     $extracted_child = $response['data']['children'][0];
 
