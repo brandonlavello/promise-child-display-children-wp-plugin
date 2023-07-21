@@ -22,6 +22,7 @@ include_once( plugin_dir_path( __FILE__ ) . 'pc_api_request.php');
 
 // ADD Actions
 add_action('admin_menu', 'pc_admin_menu_init');
+add_action('wp_enqueue_scripts', 'pc_v2_plugin_enqueue_scripts');
 
 //----------------------------------------
 // All Shortcode adds
@@ -45,6 +46,12 @@ function pc_admin_page(){
 } //end pc admin page
 
 
+//----------------------------------------
+// All Enqueue scripts and styles
+function pc_v2_plugin_enqueue_scripts() {
+    wp_enqueue_script('graphql-api-plugin', plugin_dir_url(__FILE__) . 'js/graphql-api-plugin.js', array('jquery'), '1.0', true);
+    wp_localize_script('graphql-api-plugin', 'graphql_api_ajax', array('ajax_url' => admin_url('admin-ajax.php')));
+}
 
 
 
