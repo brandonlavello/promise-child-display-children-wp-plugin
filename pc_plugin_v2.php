@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Includes
 include_once( plugin_dir_path( __FILE__ ) . 'pc_child.php');
 include_once( plugin_dir_path( __FILE__ ) . 'pc_api_request.php');
+include_once( plugin_dir_path( __FILE__ ) . 'pc_profile_page.php');
 
 // Add Actions
 add_action('admin_menu', 'pc_admin_menu_init');
@@ -28,7 +29,6 @@ add_action('wp_ajax_nopriv_graphql_api_ajax_pagination', 'graphql_api_ajax_pagin
 // All Shortcode adds
 add_shortcode('pc_display_child_profile', 'pc_display_child_profile_init');
 add_shortcode('pc_display_all_children', 'pc_display_all_children_init');
-
 
 // Add admin page function
 function pc_admin_menu_init(){
@@ -72,57 +72,6 @@ function pc_display_child_profile_init($atts) {
 
   echo $HTML_string;
 }
-
-// Gets child from database, returns child
-function get_child_details($child_id) {
-
-  $child_obj= new Pc_child($child_id);
-  $child_obj->get_child_details();
-
-  return $child_obj;
-
-} //end get child details
-
-// Write all HTML to Display Child
-function write_child_HTML($child) {
-  
-  $output_string = "";
-  // open buffer to store output
-  // all echo output goes through buffer
-	ob_start();
-
-  // H1 Header
-  echo "<h1>Promise Child Display Child</h1>";
-  echo "<p>";
-  echo "<strong>ID: </strong>" . $child->get_child_id();
-  echo nl2br ("\n<strong>Name: </strong>" . $child->get_name());
-  echo nl2br ("\n<strong>Website Status: </strong>" . $child->get_website_status());
-  echo nl2br ("\n<strong>Image Path: </strong>" . $child->get_image_path());
-  echo '<img src= "'. $child->get_image_path() . '" alt="Child Image" width="128" height="128">';
-  echo nl2br ("\n<strong>Donation Link: </strong>" . $child->get_donation_link());
-  echo nl2br ("\n<strong>Public Location: </strong>" . $child->get_public_location());
-  echo nl2br ("\n<strong>Gender: </strong>" . $child->get_gender());
-  echo nl2br ("\n<strong>Formatted Age: </strong>" . $child->get_formatted_age());
-  echo nl2br ("\n<strong>Grade: </strong>" . $child->get_grade());
-  echo nl2br ("\n<strong>Caretaker: </strong>" . $child->get_caretaker());
-  echo nl2br ("\n<strong>School Status: </strong>" . $child->get_school_status());
-  echo nl2br ("\n<strong>Religious Beliefs: </strong>" . $child->get_religious_beliefs());
-  echo nl2br ("\n<strong>Health Issues: </strong>" . $child->get_health_issues());
-  echo nl2br ("\n<strong>Interests: </strong>" . $child->get_interests());
-  echo nl2br ("\n<strong>Prayer Requests: </strong>" . $child->get_prayer_requests());
-
-  echo "</p>";
-  // get all buffered output, store it to string
-  $output_string = ob_get_contents();
-
-  // clean buffer
-  ob_end_clean();
-
-  // return output
-  return $output_string;
-
-} // end write child HTML
-
 
 
 
