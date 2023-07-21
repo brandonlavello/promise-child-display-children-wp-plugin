@@ -49,9 +49,20 @@ function get_all_children($page) {
   return $child_obj_array;
 }
 
-function write_children_HTML($child_obj_array,$page,$total_pages) {
+function write_children_HTML($child_obj_array,$page,$total_pages,$countries) {
+
   ?>
   <div id="graphql-api-container">
+
+  <!-- Country dropdown menu -->
+        <label for="graphql-api-country">Filter by Country:</label>
+        <select id="graphql-api-country">
+          <option value="">All</option>
+            <?php foreach ($countries as $country) : ?>
+                <option value="<?php echo $country; ?>"><?php echo $country; ?></option>
+            <?php endforeach; ?>
+        </select>
+
     <!-- Render your data here -->
     <?php foreach ($child_obj_array as $child_obj) { ?>
       <div class="graphql-api-item"><?php
@@ -81,7 +92,7 @@ function write_children_HTML($child_obj_array,$page,$total_pages) {
 }
 
 //Gets total page count for pagination
-function get_total_pages(){
+function get_total_pages_and_countries(){
   $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
 
   $query_type = "publicLocations";
@@ -91,8 +102,20 @@ function get_total_pages(){
   $query_order = [ ];
   $query_response_attributes = 'location totalPagesAll';
   $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
+
   $total_pages = $response['data']['publicLocations'][0]['totalPagesAll'];
-  return $total_pages;
+  
+  $countries = array();
+
+  foreach ($response['data']['publicLocations'] as $location) {
+    array_push($countries,$location["location"]);
+  }
+
+  // return [$total_pages, $countries];
+    return array('total_pages' =>  $total_pages,'countries' => $countries);
+
 }
+
+
 
 ?>
