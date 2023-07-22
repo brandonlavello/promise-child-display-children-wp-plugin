@@ -114,6 +114,8 @@ function graphql_api_ajax_pagination() {
       
       //TODO
       // Implement Country filter in API call
+
+      //Fix the duplicated div
       
       ob_start();
       

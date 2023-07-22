@@ -50,18 +50,28 @@ function get_all_children($page) {
 }
 
 function write_children_HTML($child_obj_array,$page,$total_pages,$countries) {
-
+  $selected_country = isset($_POST['country']) ? sanitize_text_field($_POST['country']) : '';
   ?>
   <div id="graphql-api-container">
 
+  
   <!-- Country dropdown menu -->
         <label for="graphql-api-country">Filter by Country:</label>
         <select id="graphql-api-country">
           <option value="">All</option>
             <?php foreach ($countries as $country) : ?>
-                <option value="<?php echo $country; ?>"><?php echo $country; ?></option>
+                <?php
+                // Check if the current country is the selected country and set the "selected" attribute
+                $selected_attr = ($selected_country === $country) ? 'selected' : '';
+                ?>
+                <option value="<?php echo $country; ?>" <?php echo $selected_attr; ?>><?php echo $country; ?></option>
             <?php endforeach; ?>
         </select>
+
+
+
+
+        
 
     <!-- Render your data here -->
     <?php foreach ($child_obj_array as $child_obj) { ?>
