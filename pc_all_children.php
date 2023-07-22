@@ -9,7 +9,7 @@ function get_all_children($page) {
   $query_type = 'children';
   $query_where = [
       'allowOnlineDonations' => '{eq:\"Yes\"}',
-      'pageNumberAll' => '{eq:' . $page . '}'
+      'pageNumberAll' => '{eq:' . $page . '}',
       ];
   $query_order = [
       'rowNumberAll' => 'ASC',
@@ -91,7 +91,7 @@ function write_children_HTML($child_obj_array,$page,$total_pages,$countries) {
   <?php
 }
 
-//Gets total page count for pagination
+//Gets total page count and countries for pagination and filtering
 function get_total_pages_and_countries(){
   $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
 
