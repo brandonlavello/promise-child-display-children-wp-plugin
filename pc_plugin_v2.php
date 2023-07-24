@@ -89,37 +89,34 @@ function pc_display_all_children_init(){
   
   //First time we are here, so it set page to 1
   $page = 1;
-  $total_pages = get_total_pages_and_countries()['total_pages'];
-  $countries = get_total_pages_and_countries()['countries'];
-
-  $child_obj_array = get_all_children($page);
+  $country = "All";
+  $countries = get_country_list();
+  $child_obj_array = get_all_children($page,$country);
   
   ob_start();
 
-  write_children_HTML($child_obj_array,$page,$total_pages,$countries);
+  write_children_HTML($child_obj_array,$page,$countries);
   
   return ob_get_clean();
 }
 
 // All consecutive page loads
 function graphql_api_ajax_pagination() {
-  $total_pages = get_total_pages_and_countries()['total_pages'];
-  $countries = get_total_pages_and_countries()['countries'];
 
   if (isset($_POST['page'])) {
       $page = intval($_POST['page']);
-      $child_obj_array = get_all_children($page);
       $country = sanitize_text_field($_POST['country']); // Get the selected country from the AJAX request
-      echo $country;
+      $countries = get_country_list();
+      $child_obj_array = get_all_children($page,$country);
+      // echo $country;
       
       //TODO
-      // Implement Country filter in API call
 
       //Fix the duplicated div
       
       ob_start();
       
-      write_children_HTML($child_obj_array,$page,$total_pages,$countries);
+      write_children_HTML($child_obj_array,$page,$countries);
 
       $output = ob_get_clean();
       echo $output;

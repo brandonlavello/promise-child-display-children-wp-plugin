@@ -4,16 +4,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 //Get all children, process and return child object array
-function get_all_children($page) {
+function get_all_children($page,$country) {
   //prepare query variables
   $query_type = 'children';
   $query_where = [
-      'allowOnlineDonations' => '{eq:\"Yes\"}',
-      'pageNumberAll' => '{eq:' . $page . '}',
+      'allowOnlineDonations' => '{eq:\"Yes\"}'
       ];
+  
+  // check if country is selected in dropdown
+  // Page count changes based on country selected or not selected:
+  // - pageNumberPubLocation vs pageNumberAll
+  if ($country != "All") {
+    $query_where['publicLocation'] = '{eq:\"' . $country . '\"}';
+    $query_where['pageNumberPubLocation'] = '{eq:' . $page . '}';
+  } else {
+    $query_where['pageNumberAll'] = '{eq:' . $page . '}';
+  }
+  // rowNumberAll for sorting
+  // TODO: Implement Row Number Sorting for Pub Location
+
   $query_order = [
       'rowNumberAll' => 'ASC',
-    ];
+  ];
   $query_response_attributes = 'childId name pageNumberAll publicLocation imagePath donationLink';
 
   $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
@@ -21,6 +33,7 @@ function get_all_children($page) {
   
   $child_obj_array = array();
 
+  //Process each child, store in Pc_child obj variable
   foreach ($response['data']['children'] as $child) {
     $child_obj = new Pc_child($child["childId"]);
     $child_obj_array[$child["childId"]] = $child_obj;
@@ -46,19 +59,22 @@ function get_all_children($page) {
     } else {$child_obj->set_donation_link("");}
 
   }
+  //return array of Pc_child objects
   return $child_obj_array;
 }
 
-function write_children_HTML($child_obj_array,$page,$total_pages,$countries) {
-  $selected_country = isset($_POST['country']) ? sanitize_text_field($_POST['country']) : '';
+
+//   write_children_HTML($child_obj_array,$page,$countries,$country);
+function write_children_HTML($child_obj_array,$page,$countries) {
+  $selected_country = isset($_POST['country']) ? sanitize_text_field($_POST['country']) : 'All';
+
   ?>
   <div id="graphql-api-container">
-
   
   <!-- Country dropdown menu -->
         <label for="graphql-api-country">Filter by Country:</label>
         <select id="graphql-api-country">
-          <option value="">All</option>
+          <option value="All">All</option>
             <?php foreach ($countries as $country) : ?>
                 <?php
                 // Check if the current country is the selected country and set the "selected" attribute
@@ -67,25 +83,22 @@ function write_children_HTML($child_obj_array,$page,$total_pages,$countries) {
                 <option value="<?php echo $country; ?>" <?php echo $selected_attr; ?>><?php echo $country; ?></option>
             <?php endforeach; ?>
         </select>
-
-
-
-
         
 
-    <!-- Render your data here -->
+    <!-- Render child data -->
     <?php foreach ($child_obj_array as $child_obj) { ?>
       <div class="graphql-api-item"><?php
-        // if (array_key_exists("pageNumberAll", $child)) {
-        //   echo "\nPage #: " . $child["pageNumberAll"];
-        // }
         echo "\n" . $child_obj->get_name();
         echo "\n" . $child_obj->get_public_location();
         echo "\n" . $child_obj->get_image_path();
         echo "\n" . $child_obj->get_donation_link(); ?>
       </div>
 
-    <?php } ?>
+    <?php } 
+      //Get total page count
+      //Pass in the selected country from the dropdown about (set from _POST)
+      $total_pages = get_total_pages($selected_country);
+    ?>
 
     <!-- Next/Previous page buttons -->
     <div class="graphql-api-pagination">
@@ -101,20 +114,58 @@ function write_children_HTML($child_obj_array,$page,$total_pages,$countries) {
   <?php
 }
 
-//Gets total page count and countries for pagination and filtering
-function get_total_pages_and_countries(){
+//Gets total page count for pagination
+function get_total_pages($country){
+  $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
+  $query_type = "publicLocations";
+  
+  // Determine if All Countries or Single Country
+  if ($country != "All") {
+    $query_where = [
+      'location' => '{eq:\"' . $country . '\"}',
+    ];
+  } else {
+    $query_where = [
+      'location' => '{neq:\"\"}',
+    ];
+  }
+  $query_order = [ ];
+  $query_response_attributes = 'location totalPagesAll totalPagesPubLocation';
+  $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
+
+  if ($country != "All") {
+    $total_pages = $response['data']['publicLocations'][0]['totalPagesPubLocation'];
+  } else {
+    $total_pages = $response['data']['publicLocations'][0]['totalPagesAll'];
+  }
+
+  // return [$total_pages, $countries];
+    return $total_pages;
+}
+
+//Gets countries for filtering
+function get_country_list(){
   $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
 
   $query_type = "publicLocations";
   $query_where = [
     'location' => '{neq:\"\"}',
   ];
+
   $query_order = [ ];
-  $query_response_attributes = 'location totalPagesAll';
+  $query_response_attributes = 'location totalPagesAll totalPagesPubLocation';
   $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
 
-  $total_pages = $response['data']['publicLocations'][0]['totalPagesAll'];
-  
+  // FUTURE TO DO:
+  // Maybe add Number of children in country next to dropdown? not sure... 
+  // There is some extra code in this function for that potentially.
+
+  // if ($country != "All") {
+  //   $total_pages = $response['data']['publicLocations'][0]['totalPagesPubLocation'];
+  // } else {
+  //   $total_pages = $response['data']['publicLocations'][0]['totalPagesAll'];
+  // }
+
   $countries = array();
 
   foreach ($response['data']['publicLocations'] as $location) {
@@ -122,10 +173,8 @@ function get_total_pages_and_countries(){
   }
 
   // return [$total_pages, $countries];
-    return array('total_pages' =>  $total_pages,'countries' => $countries);
+    return $countries;
 
 }
-
-
 
 ?>
