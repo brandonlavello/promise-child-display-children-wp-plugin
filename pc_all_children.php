@@ -17,15 +17,17 @@ function get_all_children($page,$country) {
   if ($country != "All") {
     $query_where['publicLocation'] = '{eq:\"' . $country . '\"}';
     $query_where['pageNumberPubLocation'] = '{eq:' . $page . '}';
+    $query_order = [
+      'rowNumberPubLocation' => 'ASC',
+    ];
   } else {
     $query_where['pageNumberAll'] = '{eq:' . $page . '}';
+    $query_order = [
+      'rowNumberAll' => 'ASC',
+    ];
   }
   // rowNumberAll for sorting
   // TODO: Implement Row Number Sorting for Pub Location
-
-  $query_order = [
-      'rowNumberAll' => 'ASC',
-  ];
   $query_response_attributes = 'childId name pageNumberAll publicLocation imagePath donationLink';
 
   $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
@@ -64,8 +66,7 @@ function get_all_children($page,$country) {
 }
 
 
-//   write_children_HTML($child_obj_array,$page,$countries,$country);
-function write_children_HTML($child_obj_array,$page,$countries) {
+function build_children_HTML($child_obj_array,$page,$countries) {
   $selected_country = isset($_POST['country']) ? sanitize_text_field($_POST['country']) : 'All';
 
   ?>

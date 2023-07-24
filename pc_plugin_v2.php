@@ -2,9 +2,10 @@
 /*
     Plugin Name: Promise Child Plugin V2
     Plugin URI:
-    Description: Display all PC Children in need of sponsors of front end of site.
+    Description: Plugin to display all PC Children in need of sponsors of front end of site.
     *            In addition, displays a detailed profile card of child.
-    * Version: 0.3
+    *            Plugin loads data from a GraphQL API with AJAX pagination.
+    * Version: 1.0
     * Author URI:
     * Author: Brandon Lavello
     * Author URI: https://brandonlavello.com/
@@ -73,7 +74,8 @@ function pc_display_child_profile_init($atts) {
   $child_id = ( isset( $_GET['child_id'] ) ) ? sanitize_text_field( $_GET['child_id'] ) : '0';
   # get child
   $child = get_child_details($child_id);
-  $HTML_string = write_child_HTML($child);
+  
+  $HTML_string = build_child_HTML($child);
   echo $HTML_string;
 }
 
@@ -95,7 +97,7 @@ function pc_display_all_children_init(){
   
   ob_start();
 
-  write_children_HTML($child_obj_array,$page,$countries);
+  build_children_HTML($child_obj_array,$page,$countries);
   
   return ob_get_clean();
 }
@@ -116,7 +118,7 @@ function graphql_api_ajax_pagination() {
       
       ob_start();
       
-      write_children_HTML($child_obj_array,$page,$countries);
+      build_children_HTML($child_obj_array,$page,$countries);
 
       $output = ob_get_clean();
       echo $output;
