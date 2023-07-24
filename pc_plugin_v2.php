@@ -5,7 +5,7 @@
     Description: Plugin to display all PC Children in need of sponsors of front end of site.
     *            In addition, displays a detailed profile card of child.
     *            Plugin loads data from a GraphQL API with AJAX pagination.
-    * Version: 1.0
+    * Version: 2.0
     * Author URI:
     * Author: Brandon Lavello
     * Author URI: https://brandonlavello.com/

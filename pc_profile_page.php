@@ -13,8 +13,8 @@ function get_child_details($child_id) {
 
 } //end get child details
 
-// Write all HTML to Display Child
-function write_child_HTML($child) {
+// Build all HTML to Display Child
+function build_child_HTML($child) {
   
   $output_string = "";
   // open buffer to store output
@@ -51,5 +51,5 @@ function write_child_HTML($child) {
   // return output
   return $output_string;
 
-} // end write child HTML
+} // end Build child HTML
 ?>
