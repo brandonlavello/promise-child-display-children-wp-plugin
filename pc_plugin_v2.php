@@ -96,9 +96,14 @@ function pc_display_all_children_init(){
   $child_obj_array = get_all_children($page,$country);
   
   ob_start();
+  
+  // Create div to write and re-write children into
   echo '  <div id="graphql-api-container">';
+
   build_children_HTML($child_obj_array,$page,$countries);
-  echo '    </div>';
+  
+  echo '  </div>';
+
   return ob_get_clean();
 }
 
@@ -113,8 +118,6 @@ function graphql_api_ajax_pagination() {
       // echo $country;
       
       //TODO
-
-      //Fix the duplicated div
       
       ob_start();
       
