@@ -96,9 +96,9 @@ function pc_display_all_children_init(){
   $child_obj_array = get_all_children($page,$country);
   
   ob_start();
-
+  echo '  <div id="graphql-api-container">';
   build_children_HTML($child_obj_array,$page,$countries);
-  
+  echo '    </div>';
   return ob_get_clean();
 }
 

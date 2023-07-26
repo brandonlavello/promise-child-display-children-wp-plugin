@@ -70,7 +70,6 @@ function build_children_HTML($child_obj_array,$page,$countries) {
   $selected_country = isset($_POST['country']) ? sanitize_text_field($_POST['country']) : 'All';
 
   ?>
-  <div id="graphql-api-container">
   
   <!-- Country dropdown menu -->
         <label for="graphql-api-country">Filter by Country:</label>
@@ -111,7 +110,6 @@ function build_children_HTML($child_obj_array,$page,$countries) {
       <?php } ?> 
       <?php echo "<p>" . $page . " of " . $total_pages . "</p>"; ?> 
     </div>
-  </div>
   <?php
 }
 
