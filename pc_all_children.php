@@ -28,7 +28,7 @@ function get_all_children($page,$country) {
   }
   // rowNumberAll for sorting
   // TODO: Implement Row Number Sorting for Pub Location
-  $query_response_attributes = 'childId name pageNumberAll publicLocation imagePath donationLink';
+  $query_response_attributes = 'childId name pageNumberAll publicLocation imagePath donationLink websiteStatus';
 
   $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
   $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
@@ -59,6 +59,10 @@ function get_all_children($page,$country) {
     if (array_key_exists("donationLink", $child)) {
       $child_obj->set_donation_link($child["donationLink"]);
     } else {$child_obj->set_donation_link("");}
+
+    if (array_key_exists("websiteStatus", $child)) {
+      $child_obj->set_website_status($child["websiteStatus"]);
+    } else {$child_obj->set_website_status("");}
 
   }
   //return array of Pc_child objects
@@ -96,13 +100,9 @@ function build_children_HTML($child_obj_array,$page,$countries) {
       <!-- Render child data within loop -->
       <?php foreach ($child_obj_array as $child_obj) { ?>
 
-      <div class="graphql-api-item">  
-
       <?php
         write_child_card_HTML($child_obj);
       ?>
-
-      </div> <!--end graphql-api-item-->
 
       <?php } // end for each loop for children ?> 
   
@@ -200,10 +200,60 @@ function get_country_list(){
 
 
 function write_child_card_HTML($child_obj) {
-  echo "\n" . $child_obj->get_name();
-  echo "\n" . $child_obj->get_public_location();
-  echo "\n" . $child_obj->get_image_path();
-  echo "\n" . $child_obj->get_donation_link(); 
-}
+  ?>
+    <div class="wgl_col-3 item">
+      <div class="blog-post format-gallery">
+        <div class="blog-post_wrapper"> 
 
+          <div class="blog-post_media">
+            <div class="blog-post_media_part">
+              <a href="<?php echo $child_obj->get_donation_link();?>" class="media-link image-overlay"><img src="<?php echo $child_obj->get_image_path();?>" class="blog-img lazyload" alt=""></a>
+            </div><!--end blog-post_media_part-->
+          </div><!--end blog-post_media-->
+
+          <div class="blog-post_content">
+            <h3 class="blog-post_title">
+              <a href="<?php echo $child_obj->get_donation_link();?>"> <?php echo $child_obj->get_name(); ?></a>
+            </h3>
+          </div>
+
+          <div class="meta-data">
+            <span style="color:white;" class="post_date">
+              <span class="post_date">
+                <?php echo $child_obj->get_public_location(); ?>
+              </span>
+            </span><!-- end style color class post_date -->
+          </div><!--/end meta-data-->
+          <br />
+          
+          <?php 
+            if ($child_obj->get_website_status() == "") { ?>
+              <div style="display:inline-block;">
+                <a class="wgl-button btn-size-sm" role="button" href="<?php echo $child_obj->get_donation_link();?>" target="_blank"><div class="button-content-wrapper"><span class="wgl-button-text">Sponsor</span></div></a>
+              </div>
+          <?php } else { ?>
+            <div style="display:inline-block;">
+              <a class="wgl-button btn-size-sm" role="button" href="<?php echo $child_obj->get_donation_link();?>" target="_blank"><div class="button-content-wrapper"><span class="wgl-button-text">Sponsor</span></div></a>
+            </div>
+            <div style="display:inline-block;">
+              <img src="https://promisechild.org/wp-content/uploads/2022/01/in_need.png" data-src="https://promisechild.org/wp-content/uploads/2022/01/in_need.png" class="ls-is-cached lazyloaded " style="padding-left: 50px; vertical-align:bottom !important; height:60px;">
+            </div>
+          <?php } ?>
+
+          <?php
+            // echo "\n" . $child_obj->get_name();
+            // echo "\n" . $child_obj->get_public_location();
+            // echo "\n" . $child_obj->get_image_path();
+            // echo "\n" . $child_obj->get_donation_link();
+            // echo "\n" . $child_obj->get_website_status();
+          ?>
+
+
+
+        </div><!--end blog-post_wrapper-->
+      </div><!--end blog post class format-gallery-->
+    </div><!-- wgl_col-3 item -->
+    
+  <?php       
+} //end write_child_card_HTML
 ?>
