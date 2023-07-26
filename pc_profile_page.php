@@ -19,30 +19,34 @@ function build_child_HTML($child) {
   $output_string = "";
   // open buffer to store output
   // all echo output goes through buffer
-	ob_start();
 
   // H1 Header
-  echo "<h1>Promise Child Display Child</h1>";
-  echo "<p>";
-  echo "<strong>ID: </strong>" . $child->get_child_id();
-  echo nl2br ("\n<strong>Name: </strong>" . $child->get_name());
-  echo nl2br ("\n<strong>Website Status: </strong>" . $child->get_website_status());
-  echo nl2br ("\n<strong>Image Path: </strong>" . $child->get_image_path());
-  echo '<img src= "'. $child->get_image_path() . '" alt="Child Image" width="128" height="128">';
-  echo nl2br ("\n<strong>Donation Link: </strong>" . $child->get_donation_link());
-  echo nl2br ("\n<strong>Public Location: </strong>" . $child->get_public_location());
-  echo nl2br ("\n<strong>Gender: </strong>" . $child->get_gender());
-  echo nl2br ("\n<strong>Formatted Age: </strong>" . $child->get_formatted_age());
-  echo nl2br ("\n<strong>Grade: </strong>" . $child->get_grade());
-  echo nl2br ("\n<strong>Caretaker: </strong>" . $child->get_caretaker());
-  echo nl2br ("\n<strong>School Status: </strong>" . $child->get_school_status());
-  echo nl2br ("\n<strong>Religious Beliefs: </strong>" . $child->get_religious_beliefs());
-  echo nl2br ("\n<strong>Health Issues: </strong>" . $child->get_health_issues());
-  echo nl2br ("\n<strong>Interests: </strong>" . $child->get_interests());
-  echo nl2br ("\n<strong>Prayer Requests: </strong>" . $child->get_prayer_requests());
+  ?>
+  </p>
+  <h1> <?php echo $child->get_name(); ?> </h1>
+  <p>
+    <strong>ID: </strong> <?php echo $child->get_child_id(); ?> <br>
+    <strong>Name: </strong>  <?php echo $child->get_name(); ?> <br>
+    <strong>Website Status: </strong> <?php echo $child->get_website_status();?> <br>
+    <strong>Image Path: </strong> <?php echo $child->get_image_path();?> <br>
+    <strong>Donation Link: </strong> <?php echo $child->get_donation_link();?> <br>
+    <strong>Public Location: </strong> <?php echo $child->get_public_location();?> <br>
+    <strong>Gender: </strong> <?php echo $child->get_gender();?> <br>
+    <strong>Formatted Age: </strong> <?php echo $child->get_formatted_age();?> <br>
+    <strong>Grade: </strong> <?php echo $child->get_grade();?> <br>
+    <strong>Caretaker: </strong> <?php echo $child->get_caretaker();?> <br>
+    <strong>School Status: </strong> <?php echo $child->get_school_status();?> <br>
+    <strong>Religious Beliefs: </strong> <?php echo $child->get_religious_beliefs();?> <br>
+    <strong>Health Issues: </strong> <?php echo $child->get_health_issues();?> <br>
+    <strong>Interests: </strong> <?php echo $child->get_interests();?> <br>
+    <strong>Prayer Requests: </strong> <?php echo $child->get_interests();?> <br>
+  </p>
+  <img src= "<?php echo $child->get_image_path();?>" alt="Child Image" width="128" height="128">
 
-  echo "</p>";
+  <?php
+
   // get all buffered output, store it to string
+  ob_start();
   $output_string = ob_get_contents();
 
   // clean buffer

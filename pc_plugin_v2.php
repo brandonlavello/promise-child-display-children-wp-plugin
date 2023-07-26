@@ -46,10 +46,6 @@ function pc_v2_plugin_enqueue_scripts() {
     wp_localize_script('graphql-api-plugin', 'graphql_api_ajax', array('ajax_url' => admin_url('admin-ajax.php')));
 }
 
-function pc_v2_enqueue_css_styles() {
-    wp_enqueue_style( 'pc_v2_enqueue_css_styles', plugin_dir_url( __FILE__ ) . 'css/pc_children_css.css' );
-}
-
 // // register ajax jquery script
 // function register_pc_styles() {
 //   wp_register_style( 'pc_children-styles', plugins_url( 'css/pc_children_css.css', __FILE__ ), array('css'), null, true );

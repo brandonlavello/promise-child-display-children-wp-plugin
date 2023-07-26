@@ -7,6 +7,7 @@ class Pc_child {
 
   //Declare Child Variables
   private $child_id;
+  private $child_detail_path;
   private $name;
   private $website_status;
   private $image_path;
@@ -28,6 +29,7 @@ class Pc_child {
     // This is initializing the class properties
     
     $this->child_id=$child_id;
+    $this->child_detail_path = "/display-child/?child_id=" . $child_id;
     //request_child_data requests data and sets all variables appropriately
   } // End Constructor
 
@@ -38,6 +40,9 @@ class Pc_child {
   // Getters 
   public function get_child_id() {
       return ($this->child_id);
+  }
+  public function get_child_detail_path() {
+      return ($this->child_detail_path);
   }
   public function get_name() {
     return ($this->name);
@@ -142,7 +147,7 @@ class Pc_child {
         ];
     $query_order = [
       ];
-    $query_response_attributes = 'childId imagePath donationLink publicLocation gender formatedAge websiteStatus grade caretaker schoolStatus religiousBeliefs healthIssues interests prayerRequests';
+    $query_response_attributes = 'childId name imagePath donationLink publicLocation gender formatedAge websiteStatus grade caretaker schoolStatus religiousBeliefs healthIssues interests prayerRequests';
 
     $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
     $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);

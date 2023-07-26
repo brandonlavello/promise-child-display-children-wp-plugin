@@ -120,13 +120,13 @@ function build_children_HTML($child_obj_array,$page,$countries) {
   ?>
     <!-- Render Next/Previous page buttons -->
     <div class="graphql-api-pagination">
-      <?php if($page > 1) { ?>
-        <button class="graphql-api-button" data-page="<?php echo $page - 1; ?>">Previous</button>
+      <?php if($page > 1) { ?>        
+        <button class="graphql-api-button wgl-button btn-size-sm" data-page="<?php echo $page - 1; ?>">Previous</button>
       <?php } ?>
       <?php if($page < $total_pages) { ?>
-        <button class="graphql-api-button" data-page="<?php echo $page + 1; ?>">Next</button>
+        <button class="graphql-api-button wgl-button btn-size-sm" data-page="<?php echo $page + 1; ?>">Next</button>
       <?php } ?> 
-      <?php echo "<p>" . $page . " of " . $total_pages . "</p>"; ?> 
+      <?php echo "<p> </p><p>" . $page . " of " . $total_pages . "</p>"; ?> 
     </div>
   <?php
 } //end build_children_HTML
@@ -207,49 +207,47 @@ function write_child_card_HTML($child_obj) {
 
           <div class="blog-post_media">
             <div class="blog-post_media_part">
-              <a href="<?php echo $child_obj->get_donation_link();?>" class="media-link image-overlay"><img src="<?php echo $child_obj->get_image_path();?>" class="blog-img lazyload" alt=""></a>
+              <a href="<?php echo $child_obj->get_child_detail_path();?>" class="media-link image-overlay"><img src="<?php echo $child_obj->get_image_path();?>" class="blog-img lazyload" alt=""></a>
             </div><!--end blog-post_media_part-->
           </div><!--end blog-post_media-->
 
           <div class="blog-post_content">
             <h3 class="blog-post_title">
-              <a href="<?php echo $child_obj->get_donation_link();?>"> <?php echo $child_obj->get_name(); ?></a>
+              <a href="<?php echo $child_obj->get_child_detail_path();?>"> <?php echo $child_obj->get_name(); ?></a>
             </h3>
-          </div>
 
-          <div class="meta-data">
-            <span style="color:white;" class="post_date">
-              <span class="post_date">
-                <?php echo $child_obj->get_public_location(); ?>
-              </span>
-            </span><!-- end style color class post_date -->
-          </div><!--/end meta-data-->
-          <br />
-          
-          <?php 
-            if ($child_obj->get_website_status() == "") { ?>
+            <div class="meta-data">
+              <span style="color:white;" class="post_date">
+                <span class="post_date">
+                  <?php echo $child_obj->get_public_location(); ?>
+                </span>
+              </span><!-- end style color class post_date -->
+            </div><!--/end meta-data-->
+            <br />
+            
+            <?php 
+              if ($child_obj->get_website_status() == "") { ?>
+                <div style="display:inline-block;">
+                  <a class="wgl-button btn-size-sm" role="button" href="<?php echo $child_obj->get_child_detail_path();?>"><div class="button-content-wrapper"><span class="wgl-button-text">Sponsor</span></div></a>
+                </div>
+            <?php } else { ?>
               <div style="display:inline-block;">
-                <a class="wgl-button btn-size-sm" role="button" href="<?php echo $child_obj->get_donation_link();?>" target="_blank"><div class="button-content-wrapper"><span class="wgl-button-text">Sponsor</span></div></a>
+                <a class="wgl-button btn-size-sm" role="button" href="<?php echo $child_obj->get_child_detail_path();?>"><div class="button-content-wrapper"><span class="wgl-button-text">Sponsor</span></div></a>
               </div>
-          <?php } else { ?>
-            <div style="display:inline-block;">
-              <a class="wgl-button btn-size-sm" role="button" href="<?php echo $child_obj->get_donation_link();?>" target="_blank"><div class="button-content-wrapper"><span class="wgl-button-text">Sponsor</span></div></a>
-            </div>
-            <div style="display:inline-block;">
-              <img src="https://promisechild.org/wp-content/uploads/2022/01/in_need.png" data-src="https://promisechild.org/wp-content/uploads/2022/01/in_need.png" class="ls-is-cached lazyloaded " style="padding-left: 50px; vertical-align:bottom !important; height:60px;">
-            </div>
-          <?php } ?>
-
-          <?php
-            // echo "\n" . $child_obj->get_name();
-            // echo "\n" . $child_obj->get_public_location();
-            // echo "\n" . $child_obj->get_image_path();
-            // echo "\n" . $child_obj->get_donation_link();
-            // echo "\n" . $child_obj->get_website_status();
-          ?>
+              <div style="display:inline-block;">
+                <img src="https://promisechild.org/wp-content/uploads/2022/01/in_need.png" data-src="https://promisechild.org/wp-content/uploads/2022/01/in_need.png" class="ls-is-cached lazyloaded " style="padding-left: 50px; vertical-align:bottom !important; height:60px;">
+              </div>
+            <?php } ?>
+            <?php
+              // echo "\n" . $child_obj->get_name();
+              // echo "\n" . $child_obj->get_public_location();
+              // echo "\n" . $child_obj->get_image_path();
+              // echo "\n" . $child_obj->get_donation_link();
+              // echo "\n" . $child_obj->get_website_status();
+            ?>
 
 
-
+          </div> <!-- blog-post_content -->
         </div><!--end blog-post_wrapper-->
       </div><!--end blog post class format-gallery-->
     </div><!-- wgl_col-3 item -->
