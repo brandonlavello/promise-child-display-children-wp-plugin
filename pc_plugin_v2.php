@@ -30,6 +30,7 @@ add_action('admin_menu', 'pc_admin_menu_init');
 add_action('wp_enqueue_scripts', 'pc_v2_plugin_enqueue_scripts');
 add_action('wp_ajax_graphql_api_ajax_pagination', 'graphql_api_ajax_pagination');
 add_action('wp_ajax_nopriv_graphql_api_ajax_pagination', 'graphql_api_ajax_pagination');
+add_action('wp_enqueue_scripts', 'pc_v2_enqueue_css_styles');
 
 //----------------------------------------
 // All Shortcode adds
@@ -44,6 +45,21 @@ function pc_v2_plugin_enqueue_scripts() {
     wp_enqueue_script('graphql-api-plugin', plugin_dir_url(__FILE__) . 'js/graphql-api-plugin.js', array('jquery'), 'null', true);
     wp_localize_script('graphql-api-plugin', 'graphql_api_ajax', array('ajax_url' => admin_url('admin-ajax.php')));
 }
+
+function pc_v2_enqueue_css_styles() {
+    wp_enqueue_style( 'pc_v2_enqueue_css_styles', plugin_dir_url( __FILE__ ) . 'css/pc_children_css.css' );
+}
+
+// // register ajax jquery script
+// function register_pc_styles() {
+//   wp_register_style( 'pc_children-styles', plugins_url( 'css/pc_children_css.css', __FILE__ ), array('css'), null, true );
+// }
+
+// // enqueue ajax jquery script
+// function pc_v2_plugin_enqueue_styles() {
+//    wp_enqueue_style( 'pc_children-styles' );
+// }
+
 
 //----------------------------------------
 // Admin page 
