@@ -30,7 +30,6 @@ add_action('admin_menu', 'pc_admin_menu_init');
 add_action('wp_enqueue_scripts', 'pc_v2_plugin_enqueue_scripts');
 add_action('wp_ajax_graphql_api_ajax_pagination', 'graphql_api_ajax_pagination');
 add_action('wp_ajax_nopriv_graphql_api_ajax_pagination', 'graphql_api_ajax_pagination');
-add_action('wp_enqueue_scripts', 'pc_v2_enqueue_css_styles');
 
 //----------------------------------------
 // All Shortcode adds

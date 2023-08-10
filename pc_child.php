@@ -22,6 +22,8 @@ class Pc_child {
   private $health_status;
   private $interests;
   private $prayer_requests;
+  private $flag;  // flag for random generated child -- set by null child response
+
 
   // Constructor - Initialize child, request data from API to set variables
   public function __construct($child_id){
@@ -89,6 +91,35 @@ class Pc_child {
   public function get_child_details() {
     $this->request_child_data();
   }  
+  public function get_flag() {
+    return ($this->flag);
+  }  
+
+  // Get random childId
+  public function get_random_childID() {
+    $query_type = 'children';
+    $query_where = [
+      'allowOnlineDonations' => '{eq:\"Yes\"}',
+      'pageNumberAll' => '{eq:1}'
+      ];
+    $query_order = [
+      'rowNumberPubLocation' => 'ASC',
+    ];
+    $query_response_attributes = 'childId';
+
+    $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
+    $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
+  
+    $child_array = array();
+
+    //Process each child, store in Pc_child obj variable
+    foreach ($response['data']['children'] as $child) {
+      array_push($child_array,$child["childId"]);
+    }
+
+    // return random child id from child array
+    return $child_array[rand($min,count($child_array))];
+  }
 
 
   // Setters
@@ -134,6 +165,9 @@ class Pc_child {
   public function set_prayer_requests($prayer_requests) {
     $this->prayer_requests=$prayer_requests;
   }
+  public function set_flag($flag) {
+    $this->flag=$flag;
+  }
 
 
   // Request Child Data from PC API
@@ -153,6 +187,21 @@ class Pc_child {
     $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
 
     $extracted_child = $response['data']['children'][0];
+    
+    //if child is null, choose random child from front page and display
+    if (is_null($extracted_child)){
+      //get random child number
+      $random_id = $this->get_random_childID();
+      $query_where = [
+        'childId' => '{eq:' . $random_id . '}',
+      ];
+      $api = new Pc_API_Request('https://graphql.promisechild.org/graphql/');
+      $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
+      $extracted_child = $response['data']['children'][0];
+      $this->set_flag(True);
+    } else {
+      $this->set_flag(False);
+    }
 
     // Set object variables to values Requested from PC API
     //websiteStatus

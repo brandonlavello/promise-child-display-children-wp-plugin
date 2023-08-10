@@ -34,7 +34,7 @@ function get_all_children($page,$country) {
   $response = $api->get_data($query_type,$query_where,$query_order,$query_response_attributes);
   
   $child_obj_array = array();
-
+  
   //Process each child, store in Pc_child obj variable
   foreach ($response['data']['children'] as $child) {
     $child_obj = new Pc_child($child["childId"]);
