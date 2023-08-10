@@ -45,33 +45,27 @@ function pc_v2_plugin_enqueue_scripts() {
     wp_localize_script('graphql-api-plugin', 'graphql_api_ajax', array('ajax_url' => admin_url('admin-ajax.php')));
 }
 
-// // register ajax jquery script
-// function register_pc_styles() {
-//   wp_register_style( 'pc_children-styles', plugins_url( 'css/pc_children_css.css', __FILE__ ), array('css'), null, true );
-// }
-
-// // enqueue ajax jquery script
-// function pc_v2_plugin_enqueue_styles() {
-//    wp_enqueue_style( 'pc_children-styles' );
-// }
-
 
 //----------------------------------------
 // Admin page 
 //----------------------------------------
 // Add menu page for admin page
 function pc_admin_menu_init(){
-    add_menu_page( 'Promise Child Plugin Page', 'PC Children', 'manage_options', 'pc_plugin', 'pc_admin_page');
+    add_menu_page( 'Promise Child Plugin Page', 'PC Children Plugin', 'manage_options', 'pc_plugin', 'pc_admin_page');
 } // end initialization of PC Admin Page
 
 // Write Content to PC admin page
 function pc_admin_page(){
   ?>
+      <br /><br />
       <h1>Promise Child Children</h1>
-      <h2>Select a country from the dropdown to generate a shortcode.</h2>
-      <p>Once a shortcode has been generated, copy and paste it to the page you would like.
+      <h2>Copy the shortcodes, and paste on the page.</h2>
       <br />
-      <br />      
+      <h2>Display All Children</h2>
+      <input onclick="this.focus();this.select()" size="50" type="text" value="pc_display_all_children" readonly/>
+      <br />   
+      <h2>Display Child Profile</h2>
+      <input onclick="this.focus();this.select()" size="50" type="text" value="pc_display_child_profile" readonly/>
   <?php
 } //end pc admin page
 
@@ -89,7 +83,6 @@ function pc_display_child_profile_init($atts) {
   $HTML_string = build_child_HTML($child);
   echo $HTML_string;
 }
-
 
 
 //----------------------------------------
