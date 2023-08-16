@@ -45,22 +45,27 @@ function pc_v2_plugin_enqueue_scripts() {
     wp_localize_script('graphql-api-plugin', 'graphql_api_ajax', array('ajax_url' => admin_url('admin-ajax.php')));
 }
 
+
 //----------------------------------------
 // Admin page 
 //----------------------------------------
 // Add menu page for admin page
 function pc_admin_menu_init(){
-    add_menu_page( 'Promise Child Plugin Page', 'PC Children', 'manage_options', 'pc_plugin', 'pc_admin_page');
+    add_menu_page( 'Promise Child Plugin Page', 'PC Children Plugin', 'manage_options', 'pc_plugin', 'pc_admin_page');
 } // end initialization of PC Admin Page
 
 // Write Content to PC admin page
 function pc_admin_page(){
   ?>
+      <br /><br />
       <h1>Promise Child Children</h1>
-      <h2>Select a country from the dropdown to generate a shortcode.</h2>
-      <p>Once a shortcode has been generated, copy and paste it to the page you would like.
+      <h2>Copy the shortcodes, and paste on the page.</h2>
       <br />
-      <br />      
+      <h2>Display All Children</h2>
+      <input onclick="this.focus();this.select()" size="50" type="text" value="pc_display_all_children" readonly/>
+      <br />   
+      <h2>Display Child Profile</h2>
+      <input onclick="this.focus();this.select()" size="50" type="text" value="pc_display_child_profile" readonly/>
   <?php
 } //end pc admin page
 
@@ -80,7 +85,6 @@ function pc_display_child_profile_init($atts) {
 }
 
 
-
 //----------------------------------------
 // Displaying All Promise Children
 //----------------------------------------
@@ -96,9 +100,14 @@ function pc_display_all_children_init(){
   $child_obj_array = get_all_children($page,$country);
   
   ob_start();
+  
+  // Create div to write and re-write children into
   echo '  <div id="graphql-api-container">';
+
   build_children_HTML($child_obj_array,$page,$countries);
-  echo '    </div>';
+  
+  echo '  </div>';
+
   return ob_get_clean();
 }
 
@@ -113,8 +122,6 @@ function graphql_api_ajax_pagination() {
       // echo $country;
       
       //TODO
-
-      //Fix the duplicated div
       
       ob_start();
       
