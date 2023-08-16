@@ -59,7 +59,7 @@ function build_child_HTML($child) {
                 <strong>Interests: </strong> <?php echo $child->get_interests();?> <br>
                 <strong>Prayer Requests: </strong> <?php echo $child->get_interests();?> <br>
               </p> 
-              <a class="wgl-button btn-size-sm" role="button" href="<?php echo $child->get_donation_link();?>">
+              <a class="wgl-button btn-size-sm" target="_blank" role="button" href="<?php echo $child->get_donation_link();?>">
                 <div class="button-content-wrapper">
                   <span class="wgl-button-text">Sponsor</span>
                 </div>
