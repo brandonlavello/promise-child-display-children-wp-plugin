@@ -57,7 +57,7 @@ function build_child_HTML($child) {
                 <strong>Religious Beliefs: </strong> <?php echo $child->get_religious_beliefs();?> <br>
                 <strong>Health Issues: </strong> <?php echo $child->get_health_issues();?> <br>
                 <strong>Interests: </strong> <?php echo $child->get_interests();?> <br>
-                <strong>Prayer Requests: </strong> <?php echo $child->get_interests();?> <br>
+                <strong>Prayer Requests: </strong> <?php echo $child->get_prayer_requests();?> <br>
               </p> 
               <a class="wgl-button btn-size-sm" target="_blank" role="button" href="<?php echo $child->get_donation_link();?>">
                 <div class="button-content-wrapper">
